@@ -10,6 +10,12 @@ var userGuess = "";
 var computerGuess;
 var guessArray;
 
+//Check for alpha characters
+function isAlpha(str) {
+  return /^[a-zA-Z]+$/.test(str);
+  
+}
+
 // Create variables that hold references to the places in the HTML where we want to display things.
 var directionsText = document.getElementById("directions-text");
 var userChoiceText = document.getElementById("userchoice-text");
@@ -17,13 +23,14 @@ var computerChoiceText = document.getElementById("computerchoice-text");
 var winsText = document.getElementById("wins-text");
 var lossesText = document.getElementById("losses-text");
 var guessesText = document.getElementById("guesses-text");
+var msgText = document.getElementById("msg-text");
 
 
 
 
 // This function is run whenever the user presses a key.
 document.onkeyup = function(event) {
-
+  msgText.textContent = "";
   // Determines which key was pressed.
   var userGuess =  event.key;
 
@@ -31,51 +38,58 @@ document.onkeyup = function(event) {
   var computerGuess = computerChoices[Math.floor(Math.random() * computerChoices.length)];
 
 
+ // Regular expression to require at least one letter.
+   var testThis = isAlpha(userGuess);
+
 
   // This logic determines the outcome of the game (win/loss/tie), and increments the appropriate number
-  if (userGuess === computerGuess) {
-      alert("You Win!")
-      wins++;
-      guessesLeft = 9;
-      userGuess = "";
-      computerGuess = "";
-      guessArray= "";
-      
+  if (testThis === true) {
+    if (userGuess === computerGuess) {
+        msgText.textContent = "You Win!" ;
+        wins++;
+        guessesLeft = 9;
+        userGuess = "";
+        computerGuess = "";
+        guessArray= "";
 
-    } else {
-      
-      guessesLeft--;
-      if (guessesLeft == 0){
-        losses++;
-        alert("You Loose");
-         guessesLeft = 9;
-         userGuess = "";
-         computerGuess = "";
-         guessArray= "";
+
+      } else {
+
+        guessesLeft--;
+        if (guessesLeft == 0){
+           losses++;
+           msgText.textContent = "You Lose!" ;
+           guessesLeft = 9;
+           userGuess = "";
+           computerGuess = "";
+           guessArray= "";
+        }
       }
-    }
 
-  
-
-    // Hide the directions
-    directionsText.textContent = "";
-
-    // Check for Undifind value -- if not undefined concatenate userguesses
-
-    if ( guessArray ) {
-        
-        guessArray = guessArray + " , " + userGuess
-    }else {
-
-        guessArray = userGuess
-    }
     
+      // Hide the directions
+      directionsText.textContent = "";
 
-    // Display the user and computer guesses, and wins/losses/guesses.
-    userChoiceText.textContent = "You chose: " + guessArray;
-    computerChoiceText.textContent = "The computer chose: " + computerGuess;
-    winsText.textContent = "wins: " + wins;
-    lossesText.textContent = "losses: " + losses;
-    guessesText.textContent = "Guesses Left: " + guessesLeft;
-};
+      // Check for Undifind value -- if not undefined concatenate userguesses
+
+      if ( guessArray ) {
+
+          guessArray = guessArray + " , " + userGuess
+      } else {
+
+          guessArray = userGuess
+      }
+
+
+      // Display the user and computer guesses, and wins/losses/guesses.
+      userChoiceText.textContent = "You Chose: " + guessArray;
+      computerChoiceText.textContent = "I was thinking of:  " + computerGuess;
+      winsText.textContent = "Wins: " + wins;
+      lossesText.textContent = "Losses: " + losses;
+      guessesText.textContent = "Guesses Left: " + guessesLeft;
+    } else {
+      msgText.textContent = "Please Enter an Alpha Char." ;
+    }
+  };
+
 
